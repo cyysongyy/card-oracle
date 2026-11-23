@@ -5,6 +5,6 @@ window.mkDeck = function (id, name, emoji, intro, prefix, rows) {
   window.DECKS[id] = { id: id, name: name, emoji: emoji, intro: intro,
     cards: rows.map(function (a, i) {
       return { id: prefix + (i + 1), name: a[0], en: a[1], emoji: a[2], hue: a[3], title: a[4],
-        meaning: a[5], light: a[6], shadow: a[7], ask: a[8], bg: a[9] || "", fg: a[10] || "" };
+        meaning: a[5], light: a[6], shadow: a[7], ask: a[8], bg: a[9] || "", fg: a[10] || "", scene: a[11] || "" };
     }) };
 };

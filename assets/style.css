@@ -237,3 +237,14 @@ body.solo .qrhome,body.solo #btnQR,body.solo .seg,body.solo #count,body.solo #bt
 .face.back2{display:none}
 .flip.open .face.front{display:none}
 .flip.open .face.back2{display:block}
+
+/* v15 情境組合圖：多個圖示構成故事場景 */
+.cf .scn{position:relative;width:92%;aspect-ratio:1/1;z-index:1}
+.cf .scn .si{position:absolute;aspect-ratio:1/1;height:auto;filter:drop-shadow(0 .8cqw 0 #00000026) drop-shadow(0 2.4cqw 3cqw #0000005c)}
+.cf .scn span.si{font-size:22cqw;line-height:1;display:flex;align-items:center;justify-content:center}
+.cf .scn .s0{left:2%;top:18%;width:58%}
+.cf .scn .s1{right:0;top:0;width:38%}
+.cf .scn .s2{right:2%;bottom:2%;width:38%}
+.cf .scn .s3{left:6%;bottom:0;width:30%}
+.cf .scn.n2 .s0{left:4%;top:20%;width:62%}.cf .scn.n2 .s1{right:2%;top:auto;bottom:8%;width:40%}
+.cf .scn.n3 .s1{right:0;top:4%}.cf .scn.n3 .s2{right:6%;bottom:4%}

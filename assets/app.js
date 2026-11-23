@@ -59,6 +59,18 @@
     el.insertBefore(img, node);
   }
   function emojifyAll(sel) { Array.prototype.forEach.call(document.querySelectorAll(sel), emojify); }
+  var SCN = /\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?)*/gu;
+  function sceneArt(c) {
+    var em = c.scene.match(SCN) || []; if (!em.length) return art(c);
+    var h = '<div class="scn n' + em.length + '">';
+    em.slice(0, 4).forEach(function (e, i) {
+      var k = twKey(e), svg = window.TWSVG && window.TWSVG[k];
+      if (!svg) { h += '<span class="si s' + i + ' fb">' + e + '</span>'; return; }
+      if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      h += '<img class="si s' + i + '" src="' + imgCache[k] + '" alt="' + e + '" draggable="false">';
+    });
+    return h + '</div>';
+  }
   function face(c) {
     var bg = c.bg || ("radial-gradient(circle at 50% 36%,hsl(" + c.hue + ",78%,74%) 0,hsl(" + c.hue + ",68%,54%) 52%,hsl(" + ((c.hue + 25) % 360) + ",62%,30%) 100%)");
     var light = c.fg && c.fg !== "#fff";
@@ -66,7 +78,7 @@
     num = ("00" + num).slice(-2);
     return '<div class="cf' + (light ? " lt" : "") + (c.blind ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
       '<i class="fr"></i><span class="no">' + (c.blind ? "" : "No." + num) + '</span><span class="st">✦</span>' +
-      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' + photoLayer(c) +
+      '<div class="art"><div class="halo"></div>' + (c.scene ? sceneArt(c) : art(c)) + '</div>' + photoLayer(c) +
       (c.blind
         ? '</div>'
         : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
