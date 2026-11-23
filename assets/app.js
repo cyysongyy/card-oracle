@@ -118,6 +118,16 @@
       '<p><span class="tag t-s">陰影面</span>' + esc(c.shadow) + '</p>' +
       '<p class="ask"><span class="tag t-a">自我提問</span>' + esc(c.ask) + '</p></div>';
   }
+  // 翻牌：不使用 3D 背面隱藏（手機 Safari 等會露出正面），改為轉到 90° 時切換正反面
+  function flipTo(fl, open) {
+    if (fl.classList.contains("open") === open) return;
+    if (!fl.animate) { fl.classList.toggle("open", open); return; }
+    var a1 = fl.animate([{ transform: "perspective(900px) rotateY(0deg)" }, { transform: "perspective(900px) rotateY(90deg)" }], { duration: 260, easing: "ease-in" });
+    a1.onfinish = function () {
+      fl.classList.toggle("open", open);
+      fl.animate([{ transform: "perspective(900px) rotateY(-90deg)" }, { transform: "perspective(900px) rotateY(0deg)" }], { duration: 260, easing: "ease-out" });
+    };
+  }
   function toast(msg) {
     var t = $("toast"); t.textContent = msg; t.hidden = false;
     clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 1800);
@@ -191,7 +201,7 @@
     var fl = $("flip"); fl.classList.remove("open");
     $("modal").hidden = false;
     clearTimeout(state.timer);
-    state.timer = setTimeout(function () { fl.classList.add("open"); }, 900);
+    state.timer = setTimeout(function () { flipTo(fl, true); }, 900);
     saveHistory(c);
   }
 
@@ -235,7 +245,7 @@
   $("btnRandom").onclick = function () {
     var c = state.order[Math.floor(Math.random() * state.order.length)]; openCard(c);
   };
-  $("flip").onclick = function () { clearTimeout(state.timer); $("flip").classList.toggle("open"); };
+  $("flip").onclick = function () { clearTimeout(state.timer); var f = $("flip"); flipTo(f, !f.classList.contains("open")); };
   $("btnHistory").onclick = showHistory;
   $("close").onclick = closeModal;
   $("closeHist").onclick = function () { $("hist").hidden = true; };

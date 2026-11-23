@@ -230,3 +230,10 @@ body.solo .qrhome,body.solo #btnQR,body.solo .seg,body.solo #count,body.solo #bt
 .deckpick select{font:inherit;font-size:22px;font-weight:700;color:#5b5444;padding:10px 44px 10px 22px;border-radius:999px;border:1px solid #e3dccb;background:#fffdf6 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' fill='none' stroke='%235b5444' stroke-width='2'/></svg>") no-repeat right 18px center;box-shadow:0 3px 0 #d9d0bb,0 6px 12px #0001;appearance:none;-webkit-appearance:none;cursor:pointer;max-width:92vw}
 .deckpick select:focus{outline:2px solid #7d9a68}
 @media(max-width:700px){.deckpick select{font-size:18px}}
+
+/* v12 翻牌改為正反面切換（無 3D 背面隱藏），避免手機上正反面重疊 */
+.flip,.flip.open{transform:none;transform-style:flat;transition:none}
+.face.front,.face.back2{transform:none;-webkit-backface-visibility:visible;backface-visibility:visible}
+.face.back2{display:none}
+.flip.open .face.front{display:none}
+.flip.open .face.back2{display:block}
