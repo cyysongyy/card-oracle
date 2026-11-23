@@ -57,10 +57,10 @@
     var light = c.fg && c.fg !== "#fff";
     var num = String(c.id).replace(/\D/g, "");
     num = ("00" + num).slice(-2);
-    return '<div class="cf' + (light ? " lt" : "") + (c.blind && state.mode === "draw" ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
-      '<i class="fr"></i><span class="no">' + (c.blind && state.mode === "draw" ? "" : "No." + num) + '</span><span class="st">✦</span>' +
+    return '<div class="cf' + (light ? " lt" : "") + (c.blind ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
+      '<i class="fr"></i><span class="no">' + (c.blind ? "" : "No." + num) + '</span><span class="st">✦</span>' +
       '<div class="art"><div class="halo"></div>' + art(c) + '</div>' + photoLayer(c) +
-      (c.blind && state.mode === "draw"
+      (c.blind
         ? '</div>'
         : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
   }
@@ -160,7 +160,7 @@
     var list = state.mode === "draw" ? state.order : d.cards;
     list.forEach(function (c) {
       var el = document.createElement("button");
-      el.className = "c"; el.setAttribute("aria-label", (c.blind && state.mode === "draw") ? "牌卡" : c.name);
+      el.className = "c"; el.setAttribute("aria-label", (c.blind) ? "牌卡" : c.name);
       el.innerHTML = face(c);
       el.onclick = function () { el.classList.add("picked"); openCard(c); };
       g.appendChild(el);
