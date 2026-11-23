@@ -145,24 +145,22 @@
       });
       box.appendChild(row0); emojifyAll("#decks button"); return;
     }
-    GROUPS.forEach(function (g, gi) {
-      var row = document.createElement("div"); row.className = "grp" + (openGroups[gi] ? " open" : "");
-      var lab = document.createElement("div"); lab.className = "glab"; lab.textContent = g[0];
-      lab.setAttribute("role", "button"); lab.tabIndex = 0; lab.setAttribute("aria-expanded", openGroups[gi] ? "true" : "false");
-      if (g[1].indexOf(state.deck) >= 0) { lab.className += " has"; lab.setAttribute("data-cur", DECKS[state.deck].name.replace("牌組", "")); }
-      var tog = function () { openGroups[gi] = !openGroups[gi]; renderTabs(); };
-      lab.onclick = tog; lab.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } };
-      row.appendChild(lab);
+    var wrap = document.createElement("div"); wrap.className = "deckpick";
+    var sel = document.createElement("select"); sel.id = "deckPick"; sel.setAttribute("aria-label", "選擇牌組");
+    GROUPS.forEach(function (g) {
+      var og = document.createElement("optgroup"); og.label = g[0];
       g[1].forEach(function (id) {
         var d = DECKS[id]; if (!d) return;
-        var b = document.createElement("button");
-        b.textContent = d.emoji + " " + d.name.replace("牌組", "");
-        if (state.deck === id) b.className = "on";
-        b.onclick = function () { state.deck = id; reset(); renderTabs(); };
-        row.appendChild(b);
+        var op = document.createElement("option"); op.value = id; op.textContent = d.emoji + " " + d.name.replace("牌組", "");
+        if (state.deck === id) op.selected = true;
+        og.appendChild(op);
       });
-      box.appendChild(row);
+      if (og.children.length) sel.appendChild(og);
     });
+    sel.value = state.deck;
+    sel.onchange = function () { state.deck = sel.value; reset(); };
+    wrap.appendChild(sel); box.appendChild(wrap);
+    return;
     emojifyAll('#decks .glab, #decks button');
   }
 

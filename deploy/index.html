@@ -232,20 +232,12 @@ body.solo .qrhome,body.solo #btnQR,body.solo .seg,body.solo #count,body.solo #bt
 .solotitle{font-size:22px;font-weight:700;color:#5b5444;text-align:center;margin:6px 0 2px}
 .solotitle:empty{display:none}
 
-/* v10 桌面版：分類按鈕分散在 QR 兩側，增加可視面積 */
-@media(min-width:1000px){
-  body:not(.solo) .hero{display:grid;grid-template-columns:1fr minmax(380px,480px) 1fr;grid-template-rows:repeat(3,auto);column-gap:28px;row-gap:14px;align-items:start;max-width:1500px;margin:0 auto;padding:0 18px}
-  body:not(.solo) .hero .qrhome{grid-column:2;grid-row:1/4;margin:0;align-self:start}
-  body:not(.solo) .hero #decks{display:contents}
-  body:not(.solo) .hero #decks .grp{margin:0;gap:10px;justify-content:center;align-content:flex-start}
-  body:not(.solo) .hero #decks .grp:nth-child(-n+3){grid-column:1}
-  body:not(.solo) .hero #decks .grp:nth-child(n+4){grid-column:3}
-  body:not(.solo) .hero #decks .grp:nth-child(1),body:not(.solo) .hero #decks .grp:nth-child(4){grid-row:1}
-  body:not(.solo) .hero #decks .grp:nth-child(2),body:not(.solo) .hero #decks .grp:nth-child(5){grid-row:2}
-  body:not(.solo) .hero #decks .grp:nth-child(3),body:not(.solo) .hero #decks .grp:nth-child(6){grid-row:3}
-  body:not(.solo) .hero #decks .glab{flex-basis:100%;justify-content:center;font-size:22px;margin:0}
-  body:not(.solo) .hero #decks button{font-size:19px;padding:8px 16px}
-}
+
+/* v11 牌組改為下拉式選單 */
+.deckpick{display:flex;justify-content:center;margin:14px auto 6px}
+.deckpick select{font:inherit;font-size:22px;font-weight:700;color:#5b5444;padding:10px 44px 10px 22px;border-radius:999px;border:1px solid #e3dccb;background:#fffdf6 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' fill='none' stroke='%235b5444' stroke-width='2'/></svg>") no-repeat right 18px center;box-shadow:0 3px 0 #d9d0bb,0 6px 12px #0001;appearance:none;-webkit-appearance:none;cursor:pointer;max-width:92vw}
+.deckpick select:focus{outline:2px solid #7d9a68}
+@media(max-width:700px){.deckpick select{font-size:18px}}
 
 </style>
 </head>
@@ -2247,24 +2239,22 @@ window.QR_DECKS={"animals": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       });
       box.appendChild(row0); emojifyAll("#decks button"); return;
     }
-    GROUPS.forEach(function (g, gi) {
-      var row = document.createElement("div"); row.className = "grp" + (openGroups[gi] ? " open" : "");
-      var lab = document.createElement("div"); lab.className = "glab"; lab.textContent = g[0];
-      lab.setAttribute("role", "button"); lab.tabIndex = 0; lab.setAttribute("aria-expanded", openGroups[gi] ? "true" : "false");
-      if (g[1].indexOf(state.deck) >= 0) { lab.className += " has"; lab.setAttribute("data-cur", DECKS[state.deck].name.replace("牌組", "")); }
-      var tog = function () { openGroups[gi] = !openGroups[gi]; renderTabs(); };
-      lab.onclick = tog; lab.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } };
-      row.appendChild(lab);
+    var wrap = document.createElement("div"); wrap.className = "deckpick";
+    var sel = document.createElement("select"); sel.id = "deckPick"; sel.setAttribute("aria-label", "選擇牌組");
+    GROUPS.forEach(function (g) {
+      var og = document.createElement("optgroup"); og.label = g[0];
       g[1].forEach(function (id) {
         var d = DECKS[id]; if (!d) return;
-        var b = document.createElement("button");
-        b.textContent = d.emoji + " " + d.name.replace("牌組", "");
-        if (state.deck === id) b.className = "on";
-        b.onclick = function () { state.deck = id; reset(); renderTabs(); };
-        row.appendChild(b);
+        var op = document.createElement("option"); op.value = id; op.textContent = d.emoji + " " + d.name.replace("牌組", "");
+        if (state.deck === id) op.selected = true;
+        og.appendChild(op);
       });
-      box.appendChild(row);
+      if (og.children.length) sel.appendChild(og);
     });
+    sel.value = state.deck;
+    sel.onchange = function () { state.deck = sel.value; reset(); };
+    wrap.appendChild(sel); box.appendChild(wrap);
+    return;
     emojifyAll('#decks .glab, #decks button');
   }
 
