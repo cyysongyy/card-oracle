@@ -200,6 +200,17 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .tabs img.ic{width:1.3em;height:1.3em}
 @media(max-width:700px){.tabs button{font-size:19px;padding:8px 14px}.glab{font-size:17px}.grp{gap:8px}}
 
+/* v5 collapsible deck groups (default collapsed) */
+.glab{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;background:#fffdf6;border:1px solid #e3dccb;box-shadow:0 3px 0 #d9d0bb,0 6px 12px #0001;color:#5b5444;font-weight:600;margin:6px 0}
+.glab::after{content:"▾";font-size:.8em;transition:transform .2s}
+.grp.open .glab::after{transform:rotate(180deg)}
+.glab.has:not(:hover)::before{content:attr(data-cur);order:2;font-size:.7em;font-weight:500;background:#5b6b4f;color:#fff;border-radius:999px;padding:1px 10px}
+.grp.open .glab.has::before{display:none}
+.glab:hover{background:#fff}
+.glab{flex-basis:auto!important}
+.grp:not(.open) > button{display:none}
+.grp{justify-content:center}
+
 </style>
 </head>
 <body>
@@ -1387,11 +1398,17 @@ window.QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\" s
     ["🧠 心理探索", ["emotions", "values", "strengths", "careers", "body", "gestures", "childhood", "fairytales", "sports", "selfcare"]],
     ["🎲 綜合", ["mix"]]
   ];
+  var openGroups = {};
   function renderTabs() {
     var box = $("decks"); box.innerHTML = "";
-    GROUPS.forEach(function (g) {
-      var row = document.createElement("div"); row.className = "grp";
-      var lab = document.createElement("span"); lab.className = "glab"; lab.textContent = g[0]; row.appendChild(lab);
+    GROUPS.forEach(function (g, gi) {
+      var row = document.createElement("div"); row.className = "grp" + (openGroups[gi] ? " open" : "");
+      var lab = document.createElement("div"); lab.className = "glab"; lab.textContent = g[0];
+      lab.setAttribute("role", "button"); lab.tabIndex = 0; lab.setAttribute("aria-expanded", openGroups[gi] ? "true" : "false");
+      if (g[1].indexOf(state.deck) >= 0) { lab.className += " has"; lab.setAttribute("data-cur", DECKS[state.deck].name.replace("牌組", "")); }
+      var tog = function () { openGroups[gi] = !openGroups[gi]; renderTabs(); };
+      lab.onclick = tog; lab.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } };
+      row.appendChild(lab);
       g[1].forEach(function (id) {
         var d = DECKS[id]; if (!d) return;
         var b = document.createElement("button");

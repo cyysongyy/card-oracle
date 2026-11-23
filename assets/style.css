@@ -191,3 +191,14 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .glab{font-size:24px;margin:10px 0 2px}
 .tabs img.ic{width:1.3em;height:1.3em}
 @media(max-width:700px){.tabs button{font-size:19px;padding:8px 14px}.glab{font-size:17px}.grp{gap:8px}}
+
+/* v5 collapsible deck groups (default collapsed) */
+.glab{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;background:#fffdf6;border:1px solid #e3dccb;box-shadow:0 3px 0 #d9d0bb,0 6px 12px #0001;color:#5b5444;font-weight:600;margin:6px 0}
+.glab::after{content:"▾";font-size:.8em;transition:transform .2s}
+.grp.open .glab::after{transform:rotate(180deg)}
+.glab.has:not(:hover)::before{content:attr(data-cur);order:2;font-size:.7em;font-weight:500;background:#5b6b4f;color:#fff;border-radius:999px;padding:1px 10px}
+.grp.open .glab.has::before{display:none}
+.glab:hover{background:#fff}
+.glab{flex-basis:auto!important}
+.grp:not(.open) > button{display:none}
+.grp{justify-content:center}

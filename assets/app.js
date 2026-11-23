@@ -80,11 +80,17 @@
     ["🧠 心理探索", ["emotions", "values", "strengths", "careers", "body", "gestures", "childhood", "fairytales", "sports", "selfcare"]],
     ["🎲 綜合", ["mix"]]
   ];
+  var openGroups = {};
   function renderTabs() {
     var box = $("decks"); box.innerHTML = "";
-    GROUPS.forEach(function (g) {
-      var row = document.createElement("div"); row.className = "grp";
-      var lab = document.createElement("span"); lab.className = "glab"; lab.textContent = g[0]; row.appendChild(lab);
+    GROUPS.forEach(function (g, gi) {
+      var row = document.createElement("div"); row.className = "grp" + (openGroups[gi] ? " open" : "");
+      var lab = document.createElement("div"); lab.className = "glab"; lab.textContent = g[0];
+      lab.setAttribute("role", "button"); lab.tabIndex = 0; lab.setAttribute("aria-expanded", openGroups[gi] ? "true" : "false");
+      if (g[1].indexOf(state.deck) >= 0) { lab.className += " has"; lab.setAttribute("data-cur", DECKS[state.deck].name.replace("牌組", "")); }
+      var tog = function () { openGroups[gi] = !openGroups[gi]; renderTabs(); };
+      lab.onclick = tog; lab.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } };
+      row.appendChild(lab);
       g[1].forEach(function (id) {
         var d = DECKS[id]; if (!d) return;
         var b = document.createElement("button");
