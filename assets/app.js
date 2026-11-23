@@ -161,21 +161,6 @@
       });
       box.appendChild(row0); emojifyAll("#decks button"); return;
     }
-    var wrap = document.createElement("div"); wrap.className = "deckpick";
-    var sel = document.createElement("select"); sel.id = "deckPick"; sel.setAttribute("aria-label", "選擇牌組");
-    GROUPS.forEach(function (g) {
-      var og = document.createElement("optgroup"); og.label = g[0];
-      g[1].forEach(function (id) {
-        var d = DECKS[id]; if (!d) return;
-        var op = document.createElement("option"); op.value = id; op.textContent = d.emoji + " " + d.name.replace("牌組", "");
-        if (state.deck === id) op.selected = true;
-        og.appendChild(op);
-      });
-      if (og.children.length) sel.appendChild(og);
-    });
-    sel.value = state.deck;
-    sel.onchange = function () { state.deck = sel.value; reset(); };
-    wrap.appendChild(sel); box.appendChild(wrap);
     return;
     emojifyAll('#decks .glab, #decks button');
   }
@@ -289,13 +274,18 @@
   }
   (function () {
     var sel = $("sharePick"); if (!sel) return;
-    var o = document.createElement("option"); o.value = ""; o.textContent = "整個網站（全部牌組）"; sel.appendChild(o);
+    var o = document.createElement("option"); o.value = ""; o.textContent = "整個網站（保持目前牌組）"; sel.appendChild(o);
     GROUPS.forEach(function (g) {
       var og = document.createElement("optgroup"); og.label = g[0].replace(/^\S+\s/, "");
       g[1].forEach(function (id) { if (id === "mix" || !DECKS[id]) return; var op = document.createElement("option"); op.value = id; op.textContent = DECKS[id].emoji + " " + DECKS[id].name; og.appendChild(op); });
       if (og.children.length) sel.appendChild(og);
     });
-    sel.onchange = function () { shareId = sel.value; refreshShare(); };
+    var mo = document.createElement("option"); mo.value = "mix"; mo.textContent = "🎲 綜合（所有牌組）"; sel.appendChild(mo);
+    sel.onchange = function () {
+      var v = sel.value; shareId = (v === "mix") ? "" : v;
+      if (v) { state.deck = v; reset(); }
+      refreshShare();
+    };
   })();
   refreshShare();
   $("btnCopyLink").onclick = function () {
