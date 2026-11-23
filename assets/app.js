@@ -35,6 +35,21 @@
     if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     return '<img class="tw ' + (cls || "") + '" src="' + imgCache[k] + '" alt="' + c.emoji + '" draggable="false">';
   }
+  // 把文字開頭的 emoji 換成內嵌向量插圖，確保各裝置顯示一致（不再出現缺字方框）
+  var LEAD = /^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?)*)\s*/u;
+  function emojify(el) {
+    if (!el) return;
+    var node = el.firstChild;
+    while (node && node.nodeType !== 3) node = node.nextSibling;
+    if (!node) return;
+    var m = LEAD.exec(node.nodeValue); if (!m) return;
+    var k = twKey(m[1]), svg = window.TWSVG && window.TWSVG[k]; if (!svg) return;
+    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    var img = document.createElement("img"); img.className = "ic"; img.src = imgCache[k]; img.alt = m[1]; img.draggable = false;
+    node.nodeValue = node.nodeValue.slice(m[0].length);
+    el.insertBefore(img, node);
+  }
+  function emojifyAll(sel) { Array.prototype.forEach.call(document.querySelectorAll(sel), emojify); }
   function face(c) {
     var bg = c.bg || ("radial-gradient(circle at 50% 36%,hsl(" + c.hue + ",78%,74%) 0,hsl(" + c.hue + ",68%,54%) 52%,hsl(" + ((c.hue + 25) % 360) + ",62%,30%) 100%)");
     var light = c.fg && c.fg !== "#fff";
@@ -80,6 +95,7 @@
       });
       box.appendChild(row);
     });
+    emojifyAll('#decks .glab, #decks button');
   }
 
   function reset() {
@@ -193,6 +209,26 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") { closeModal(); $("hist").hidden = true; $("qrm").hidden = true; }
   });
+
+  // 立體卡面：游標傾斜與光澤（桌機）
+  var gridEl = $("grid");
+  gridEl.addEventListener("pointermove", function (e) {
+    if (e.pointerType === "touch") return;
+    var c = e.target.closest && e.target.closest(".c"); if (!c) return;
+    var r = c.getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    c.style.setProperty("--ry", ((px - .5) * 16).toFixed(2) + "deg");
+    c.style.setProperty("--rx", ((.5 - py) * 16).toFixed(2) + "deg");
+    c.style.setProperty("--ax", ((.5 - px) * 8).toFixed(1) + "px");
+    c.style.setProperty("--ay", ((.5 - py) * 8).toFixed(1) + "px");
+    c.style.setProperty("--gx", (px * 100).toFixed(0) + "%");
+    c.style.setProperty("--gy", (py * 100).toFixed(0) + "%");
+  });
+  gridEl.addEventListener("pointerout", function (e) {
+    var c = e.target.closest && e.target.closest(".c"); if (!c) return;
+    ["--rx", "--ry", "--ax", "--ay"].forEach(function (k) { c.style.removeProperty(k); });
+  });
+  emojifyAll("h1, .acts button, .seg button, .qrtxt b, .sheet-acts button, #hist h2, #qrm h2");
 
   $("count").textContent = "共 " + (ids.length - 1) + " 大牌組、" + (all.length) + " 張牌。";
   state.deck = ids[0];
