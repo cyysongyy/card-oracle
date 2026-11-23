@@ -3,7 +3,12 @@
 線上心理投射牌卡：憑直覺選一張牌，翻開後顯示背後意涵（意象、光明面、陰影面、自我提問）。
 純靜態網站，無後端，可直接放上 GitHub Pages。
 
-牌組：🌿 植物 30｜🦊 動物 30｜🍜 食物 30｜🏔️ 山水 30｜🎲 綜合（全部混合，共 120 張）
+牌組（共 14 組、420 張，每組 30 張）：
+- 自然四類：🌿植物｜🦊動物｜🍜食物｜🏔️山水
+- 心理投射十類：🎨顏色｜🔷形狀｜🏠家屋（房樹人啟發）｜🌙夢境｜⛅天氣｜🚲交通｜🗝️物件｜🧙角色（榮格原型）｜🎭情境（主題統覺啟發）｜🎻樂器
+- 🎲綜合（全部混合）
+
+玩法：圖卡先正面朝上 → 憑直覺點選 → 翻到背面看心理意涵。
 
 ## QR Code
 部署後打開網站，按「📱 QR Code」即可顯示、下載、列印該網址的 QR（自動以目前網址產生）。
@@ -14,12 +19,14 @@
 3. 網址：`https://cyysongyy.github.io/card-oracle/`
 
 ## 新增牌組（例如動物）
-1. 複製 `data/plants.js` 為 `data/animals.js`，把 `window.DECKS.plants` 改成 `window.DECKS.animals`，id/name/emoji/intro 與 cards 內容改成動物。
-2. `index.html` 取消註解 `<script src="data/animals.js"></script>`。
-3. `assets/app.js` 的 `DECK_META` 已預留 animals / food / landscape，名稱需一致。
+1. 複製 `data/colors.js` 為新檔（例如 `data/birds.js`），用 `mkDeck(id, 名稱, emoji, 導語, 前綴, rows)` 寫入牌卡。
+2. 在 `index.html` 加一行 `<script src="data/birds.js"></script>`（放在 app.js 之前）。分頁與綜合牌組會自動出現。
 
 ## 牌卡欄位
-`id` `name` `en` `emoji` `hue`（牌面色相 0–360） `title` `meaning` `light` `shadow` `ask`
+mkDeck 每列：`[名稱, 英文, emoji, 色相, 意象, 意涵, 光明面, 陰影面, 自我提問, (選填)背景CSS, (選填)文字色]`
 
 ## 聲明
 本工具為自我覺察與對話引導之趣味工具，非心理診斷或專業評估。
+
+## 設計依據
+心理投射測驗以模糊刺激引出聯想（如墨跡、房樹人繪畫、主題統覺、色彩與形狀聯想）。本工具借用「聯想」概念做自我覺察遊戲，牌義為通俗象徵詮釋，顏色等象徵因文化與個人經驗而異，不具診斷效力。
