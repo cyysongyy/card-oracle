@@ -16,7 +16,8 @@
     <div class="qrtxt">
       <b>📱 掃描 QR Code，立即進入</b>
       <span id="siteurl"></span>
-      <div class="qracts"><button id="btnQRdl2">下載 QR 圖片</button><button id="btnQRprint2">列印海報</button></div>
+      <label class="sharepick">要分享的測驗：<select id="sharePick"></select></label>
+      <div class="qracts"><button id="btnCopyLink">複製連結</button><button id="btnQRdl2">下載 QR 圖片</button><button id="btnQRprint2">列印海報</button></div>
     </div>
   </section>
   <nav id="decks" class="tabs" aria-label="牌組"></nav>
@@ -114,6 +115,7 @@
 <script src="data/photos.js"></script>
 <script src="data/emoji.js"></script>
 <script src="data/qr.js"></script>
+<script src="data/qr_decks.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

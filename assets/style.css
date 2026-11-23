@@ -216,3 +216,10 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .cf .photo.on{opacity:1}
 .cf:has(.photo.on) .halo,.cf:has(.photo.on) .tw,.cf:has(.photo.on) .fb{opacity:0}
 .cf:has(.photo.on) .st{display:none}
+
+/* v9 單一測驗模式與分享選單 */
+.sharepick{display:block;margin:8px 0 2px;font-size:13px;color:#6b6759}
+.sharepick select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid #d8d1bd;background:#fffdf6;max-width:100%}
+body.solo .qrhome,body.solo #btnQR,body.solo .seg,body.solo #count,body.solo #btnHistory{display:none!important}
+.solotitle{font-size:22px;font-weight:700;color:#5b5444;text-align:center;margin:6px 0 2px}
+.solotitle:empty{display:none}

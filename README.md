@@ -36,3 +36,11 @@ mkDeck 每列：`[名稱, 英文, emoji, 色相, 意象, 意涵, 光明面, 陰�
 
 ## 設計依據
 心理投射測驗以模糊刺激引出聯想（如墨跡、房樹人繪畫、主題統覺、色彩與形狀聯想）。本工具借用「聯想」概念做自我覺察遊戲，牌義為通俗象徵詮釋，顏色等象徵因文化與個人經驗而異，不具診斷效力。
+
+## 只開放單一測驗給參加者
+在網址後面加上 `?deck=牌組代號`，參加者就只會看到該牌組（沒有牌組選單、QR 區、圖鑑與綜合牌組）：
+
+- 範例：`https://cyysongyy.github.io/card-oracle/?deck=growth`（成長）
+- 可列出多個：`?deck=growth,communication`
+- 首頁「要分享的測驗」下拉選單可直接產生各牌組專屬 QR Code、複製連結、下載或列印。
+- 牌組代號：animals、plants、food、fruit、drinks、landscape、colors、shapes、house、dreams、weather、vehicles、objects、archetypes、scenes、music、emotions、iceberg、selfcare、communication、growth、relations、values、strengths、careers、body、gestures、childhood、fairytales、sports、campus、leadership

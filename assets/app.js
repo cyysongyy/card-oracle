@@ -13,6 +13,13 @@
   all.forEach(function (c) { c.blind = true; });
 
   var $ = function (id) { return document.getElementById(id); };
+  // 單一測驗模式：網址加 ?deck=牌組代號（可用逗號列出多個），參加者只會看到指定的牌組
+  var SOLO = (function () {
+    var p = ""; try { p = new URLSearchParams(location.search).get("deck") || ""; } catch (e) {}
+    var l = p.split(",").map(function (s) { return s.trim(); }).filter(function (s) { return s && s !== "mix" && DECKS[s]; });
+    return l.length ? l : null;
+  })();
+  if (SOLO) document.body.classList.add("solo");
   var state = { deck: null, mode: "draw", order: [], current: null, timer: null };
   var KEY = "card-oracle-history-v2";
 
@@ -127,6 +134,17 @@
   var openGroups = {};
   function renderTabs() {
     var box = $("decks"); box.innerHTML = "";
+    if (SOLO) {
+      if (SOLO.length < 2) return;
+      var row0 = document.createElement("div"); row0.className = "grp open";
+      SOLO.forEach(function (id) {
+        var b = document.createElement("button"); b.textContent = DECKS[id].emoji + " " + DECKS[id].name.replace("牌組", "");
+        if (state.deck === id) b.className = "on";
+        b.onclick = function () { state.deck = id; reset(); renderTabs(); };
+        row0.appendChild(b);
+      });
+      box.appendChild(row0); emojifyAll("#decks button"); return;
+    }
     GROUPS.forEach(function (g, gi) {
       var row = document.createElement("div"); row.className = "grp" + (openGroups[gi] ? " open" : "");
       var lab = document.createElement("div"); lab.className = "glab"; lab.textContent = g[0];
@@ -228,6 +246,10 @@
   $("btnAgain").onclick = function () { closeModal(); if (state.mode === "draw") reset(); };
   // QR：內嵌 SVG，固定指向正式網址
   var SITE = window.SITE_URL || pageUrl();
+  var shareId = "";
+  function curSvg() { return (shareId && window.QR_DECKS && window.QR_DECKS[shareId]) || window.QR_SVG_SITE; }
+  function curUrl() { return shareId ? SITE + "?deck=" + shareId : SITE; }
+  function curName() { return shareId ? DECKS[shareId].name : "心象牌卡"; }
   function qrPng(cb) {
     var img = new Image();
     img.onload = function () {
@@ -236,21 +258,37 @@
       x.fillStyle = "#fff"; x.fillRect(0, 0, 800, 800); x.drawImage(img, 0, 0, 800, 800);
       cb(cv.toDataURL("image/png"));
     };
-    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(window.QR_SVG);
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(curSvg());
   }
   function downloadQR() {
-    qrPng(function (url) { var a = document.createElement("a"); a.href = url; a.download = "card-oracle-qr.png"; a.click(); });
+    qrPng(function (url) { var a = document.createElement("a"); a.href = url; a.download = "card-oracle-qr" + (shareId ? "-" + shareId : "") + ".png"; a.click(); });
   }
   function printQR() {
     var w = window.open("", "_blank");
     if (!w) { toast("請允許彈出視窗再列印"); return; }
-    w.document.write('<title>心象牌卡 QR</title><body style="font-family:sans-serif;text-align:center;padding:40px"><h1>🎴 心象牌卡</h1><p>手機掃描 QR Code，憑直覺抽一張牌</p><div style="width:340px;margin:20px auto">' + window.QR_SVG + '</div><p>' + SITE + '</p><script>setTimeout(function(){print()},300)<\/script>');
+    w.document.write('<title>心象牌卡 QR</title><body style="font-family:sans-serif;text-align:center;padding:40px"><h1>🎴 ' + curName() + '</h1><p>手機掃描 QR Code，憑直覺抽一張牌</p><div style="width:340px;margin:20px auto">' + curSvg() + '</div><p>' + curUrl() + '</p><script>setTimeout(function(){print()},300)<\/script>');
     w.document.close();
   }
-  $("qrhome").innerHTML = window.QR_SVG || "";
-  $("qrbox").innerHTML = window.QR_SVG || "";
-  $("siteurl").textContent = SITE;
-  $("btnQR").onclick = function () { $("qrurl").textContent = SITE; $("qrm").hidden = false; };
+  window.QR_SVG_SITE = window.QR_SVG;
+  function refreshShare() {
+    $("qrhome").innerHTML = curSvg() || ""; $("qrbox").innerHTML = curSvg() || ""; $("siteurl").textContent = curUrl();
+  }
+  (function () {
+    var sel = $("sharePick"); if (!sel) return;
+    var o = document.createElement("option"); o.value = ""; o.textContent = "整個網站（全部牌組）"; sel.appendChild(o);
+    GROUPS.forEach(function (g) {
+      var og = document.createElement("optgroup"); og.label = g[0].replace(/^\S+\s/, "");
+      g[1].forEach(function (id) { if (id === "mix" || !DECKS[id]) return; var op = document.createElement("option"); op.value = id; op.textContent = DECKS[id].emoji + " " + DECKS[id].name; og.appendChild(op); });
+      if (og.children.length) sel.appendChild(og);
+    });
+    sel.onchange = function () { shareId = sel.value; refreshShare(); };
+  })();
+  refreshShare();
+  $("btnCopyLink").onclick = function () {
+    var u = curUrl();
+    if (navigator.clipboard) navigator.clipboard.writeText(u).then(function () { toast("已複製連結"); }, function () { toast(u); }); else toast(u);
+  };
+  $("btnQR").onclick = function () { $("qrurl").textContent = curUrl(); $("qrm").hidden = false; };
   $("closeQR").onclick = function () { $("qrm").hidden = true; };
   $("btnQRdl").onclick = downloadQR; $("btnQRdl2").onclick = downloadQR;
   $("btnQRprint").onclick = printQR; $("btnQRprint2").onclick = printQR;
@@ -282,6 +320,12 @@
   emojifyAll("h1, .acts button, .seg button, .qrtxt b, .sheet-acts button, #hist h2, #qrm h2");
 
   $("count").textContent = "共 " + (ids.length - 1) + " 大牌組、" + (all.length) + " 張牌。";
-  state.deck = ids[0];
+  state.deck = SOLO ? SOLO[0] : ids[0];
+  if (SOLO) {
+    document.title = DECKS[SOLO[0]].name + "｜心象牌卡";
+    var st = document.createElement("p"); st.className = "solotitle"; st.id = "solotitle";
+    st.textContent = SOLO.length === 1 ? DECKS[SOLO[0]].emoji + " " + DECKS[SOLO[0]].name.replace("牌組", "") + "測驗" : "";
+    $("decks").parentNode.insertBefore(st, $("decks")); emojifyAll("#solotitle");
+  }
   renderTabs(); setMode("draw");
 })();
