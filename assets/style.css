@@ -210,3 +210,7 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .cf.nl .fb{font-size:56cqw}
 .cf.nl .st{bottom:7cqw}
 .cf.nl .st,.cf.nl .no{display:none}
+/* v7 3D 擬真插圖略放大 */
+.cf .tw.t3{width:56cqw;height:56cqw}
+.cf.nl .tw.t3{width:80cqw;height:80cqw}
+.bk-h .tw.t3{width:1.6em;height:1.6em}

@@ -31,11 +31,19 @@
     if (e.indexOf("\u200d") < 0) cps = cps.filter(function (x) { return x !== "fe0f"; });
     return cps.join("-");
   }
-  function art(c, cls) {
-    var k = twKey(c.emoji), svg = window.TWSVG && window.TWSVG[k];
-    if (!svg) return '<span class="fb">' + c.emoji + '</span>';
+  var SET3D = {}; (window.IMG3D || []).forEach(function (k) { SET3D[k] = 1; });
+  function svgUri(k) {
+    var svg = window.TWSVG && window.TWSVG[k]; if (!svg) return "";
     if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    return '<img class="tw ' + (cls || "") + '" src="' + imgCache[k] + '" alt="' + c.emoji + '" draggable="false">';
+    return imgCache[k];
+  }
+  window.__tw = function (img) { var u = svgUri(img.getAttribute("data-k")); img.onerror = null; if (u) img.src = u; };
+  function art(c, cls) {
+    var k = twKey(c.emoji);
+    if (SET3D[k]) return '<img class="tw t3 ' + (cls || "") + '" src="assets/3d/' + k + '.webp" data-k="' + k + '" onerror="__tw(this)" alt="' + c.emoji + '" draggable="false">';
+    var u = svgUri(k);
+    if (!u) return '<span class="fb">' + c.emoji + '</span>';
+    return '<img class="tw ' + (cls || "") + '" src="' + u + '" alt="' + c.emoji + '" draggable="false">';
   }
   // 把文字開頭的 emoji 換成內嵌向量插圖，確保各裝置顯示一致（不再出現缺字方框）
   var LEAD = /^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?)*)\s*/u;
