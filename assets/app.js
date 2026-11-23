@@ -31,19 +31,11 @@
     if (e.indexOf("\u200d") < 0) cps = cps.filter(function (x) { return x !== "fe0f"; });
     return cps.join("-");
   }
-  var SET3D = {}; (window.IMG3D || []).forEach(function (k) { SET3D[k] = 1; });
-  function svgUri(k) {
-    var svg = window.TWSVG && window.TWSVG[k]; if (!svg) return "";
-    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    return imgCache[k];
-  }
-  window.__tw = function (img) { var u = svgUri(img.getAttribute("data-k")); img.onerror = null; if (u) img.src = u; };
   function art(c, cls) {
-    var k = twKey(c.emoji);
-    if (SET3D[k]) return '<img class="tw t3 ' + (cls || "") + '" src="assets/3d/' + k + '.webp" data-k="' + k + '" onerror="__tw(this)" alt="' + c.emoji + '" draggable="false">';
-    var u = svgUri(k);
-    if (!u) return '<span class="fb">' + c.emoji + '</span>';
-    return '<img class="tw ' + (cls || "") + '" src="' + u + '" alt="' + c.emoji + '" draggable="false">';
+    var k = twKey(c.emoji), svg = window.TWSVG && window.TWSVG[k];
+    if (!svg) return '<span class="fb">' + c.emoji + '</span>';
+    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    return '<img class="tw ' + (cls || "") + '" src="' + imgCache[k] + '" alt="' + c.emoji + '" draggable="false">';
   }
   // 把文字開頭的 emoji 換成內嵌向量插圖，確保各裝置顯示一致（不再出現缺字方框）
   var LEAD = /^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?)*)\s*/u;
@@ -67,10 +59,48 @@
     num = ("00" + num).slice(-2);
     return '<div class="cf' + (light ? " lt" : "") + (c.blind && state.mode === "draw" ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
       '<i class="fr"></i><span class="no">' + (c.blind && state.mode === "draw" ? "" : "No." + num) + '</span><span class="st">✦</span>' +
-      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' +
+      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' + photoLayer(c) +
       (c.blind && state.mode === "draw"
         ? '</div>'
         : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
+  }
+  // ===== 真實照片：從英文維基百科條目取得首圖（僅取 JPG 照片），失敗則維持插圖 =====
+  var PH_KEY = "card-oracle-photo-v1", phCache = {}, phPending = {};
+  try { phCache = JSON.parse(localStorage.getItem(PH_KEY) || "{}"); } catch (e) { phCache = {}; }
+  function phSave() { try { localStorage.setItem(PH_KEY, JSON.stringify(phCache)); } catch (e) {} }
+  function photoTitle(c) {
+    if (!window.PHOTOS) return "";
+    for (var d in window.PHOTOS) { var t = window.PHOTOS[d][c.name]; if (t && DECKS[d] && DECKS[d].cards.indexOf(c) >= 0) return t; }
+    return "";
+  }
+  function photoLayer(c) {
+    var t = photoTitle(c); if (!t) return "";
+    return '<div class="photo" data-t="' + esc(t) + '"></div>';
+  }
+  function phUrl(t) {
+    if (phCache[t] !== undefined) return Promise.resolve(phCache[t]);
+    if (phPending[t]) return phPending[t];
+    phPending[t] = fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(t.replace(/ /g, "_")))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        var u = j && j.type !== "disambiguation" && j.thumbnail && j.thumbnail.source || "";
+        if (!/\.jpe?g(\/|$)/i.test(u)) u = "";
+        else u = u.replace(/\/\d+px-/, "/500px-");
+        phCache[t] = u; phSave(); return u;
+      })
+      .catch(function () { return ""; });
+    return phPending[t];
+  }
+  function loadPhotos(root) {
+    if (!root) return;
+    Array.prototype.forEach.call(root.querySelectorAll(".photo[data-t]"), function (el) {
+      phUrl(el.getAttribute("data-t")).then(function (u) {
+        if (!u) return;
+        var im = new Image();
+        im.onload = function () { el.style.backgroundImage = "url('" + u + "')"; el.classList.add("on"); if (el.parentNode) el.parentNode.classList.add("hasph"); };
+        im.src = u;
+      });
+    });
   }
   function backHtml(c) {
     return '<div class="bk"><div class="wm">' + art(c) + '</div>' +
@@ -135,11 +165,12 @@
       el.onclick = function () { el.classList.add("picked"); openCard(c); };
       g.appendChild(el);
     });
+    loadPhotos(g);
   }
 
   function openCard(c) {
     state.current = c;
-    $("front").innerHTML = face(c);
+    $("front").innerHTML = face(c); loadPhotos($("front"));
     $("backface").innerHTML = backHtml(c);
     var fl = $("flip"); fl.classList.remove("open");
     $("modal").hidden = false;

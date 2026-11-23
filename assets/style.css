@@ -210,7 +210,9 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .cf.nl .fb{font-size:56cqw}
 .cf.nl .st{bottom:7cqw}
 .cf.nl .st,.cf.nl .no{display:none}
-/* v7 3D 擬真插圖略放大 */
-.cf .tw.t3{width:56cqw;height:56cqw}
-.cf.nl .tw.t3{width:80cqw;height:80cqw}
-.bk-h .tw.t3{width:1.6em;height:1.6em}
+
+/* v8 真實照片層 */
+.cf .photo{position:absolute;left:6cqw;right:6cqw;top:8cqw;bottom:8cqw;border-radius:5cqw;background:#0000 center/cover no-repeat;opacity:0;transition:opacity .35s;z-index:2;box-shadow:0 1.2cqw 3cqw #0006,inset 0 0 0 .8cqw #ffffffcc;border:.8cqw solid #fffffff0}
+.cf .photo.on{opacity:1}
+.cf:has(.photo.on) .halo,.cf:has(.photo.on) .tw,.cf:has(.photo.on) .fb{opacity:0}
+.cf:has(.photo.on) .st{display:none}

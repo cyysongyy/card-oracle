@@ -218,10 +218,12 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .cf.nl .fb{font-size:56cqw}
 .cf.nl .st{bottom:7cqw}
 .cf.nl .st,.cf.nl .no{display:none}
-/* v7 3D 擬真插圖略放大 */
-.cf .tw.t3{width:56cqw;height:56cqw}
-.cf.nl .tw.t3{width:80cqw;height:80cqw}
-.bk-h .tw.t3{width:1.6em;height:1.6em}
+
+/* v8 真實照片層 */
+.cf .photo{position:absolute;left:6cqw;right:6cqw;top:8cqw;bottom:8cqw;border-radius:5cqw;background:#0000 center/cover no-repeat;opacity:0;transition:opacity .35s;z-index:2;box-shadow:0 1.2cqw 3cqw #0006,inset 0 0 0 .8cqw #ffffffcc;border:.8cqw solid #fffffff0}
+.cf .photo.on{opacity:1}
+.cf:has(.photo.on) .halo,.cf:has(.photo.on) .tw,.cf:has(.photo.on) .fb{opacity:0}
+.cf:has(.photo.on) .st{display:none}
 
 </style>
 </head>
@@ -259,7 +261,7 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 
 <footer>
   <p>本牌卡為自我覺察與反思的輔助工具，屬「投射式」趣味與對話引導，<b>並非心理診斷或專業評估</b>。<br>
-  <span id="count"></span>想新增牌組？見 README。<br>插圖：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC-BY 4.0）。</p>
+  <span id="count"></span>想新增牌組？見 README。<br>插圖：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC-BY 4.0）。<br>照片：取自<a href="https://zh.wikipedia.org" target="_blank" rel="noopener">維基百科</a>／維基共享資源，各圖依原作者授權（點開維基條目可查）。</p>
 </footer>
 
 <div id="modal" class="modal" hidden>
@@ -1587,8 +1589,473 @@ mkDeck("leadership","領導","🧭","領導不是職稱，而是一連串的選�
 
 </script>
 <script>
-/* 3D 擬真插圖清單（Microsoft Fluent Emoji 3D, MIT） */
-window.IMG3D=["1f198", "1f300", "1f303", "1f304", "1f305", "1f307", "1f308", "1f309", "1f30a", "1f30b", "1f30c", "1f30d", "1f311", "1f315", "1f319", "1f31e", "1f31f", "1f320", "1f324", "1f326", "1f327", "1f328", "1f32a", "1f32b", "1f32c", "1f32d", "1f32e", "1f330", "1f331", "1f332", "1f333", "1f334", "1f335", "1f336", "1f337", "1f338", "1f339", "1f33a", "1f33b", "1f33c", "1f33d", "1f33e", "1f33f", "1f340", "1f341", "1f342", "1f343", "1f345", "1f347", "1f348", "1f349", "1f34a", "1f34b", "1f34c", "1f34d", "1f34e", "1f34f", "1f350", "1f351", "1f352", "1f353", "1f354", "1f355", "1f357", "1f35a", "1f35c", "1f35e", "1f360", "1f361", "1f362", "1f363", "1f364", "1f366", "1f367", "1f36a", "1f36b", "1f36c", "1f36e", "1f36f", "1f370", "1f371", "1f372", "1f373", "1f375", "1f377", "1f37c", "1f37d", "1f380", "1f381", "1f383", "1f388", "1f38b", "1f38d", "1f392", "1f393", "1f396", "1f399", "1f39b", "1f3a0", "1f3a1", "1f3a2", "1f3a3", "1f3a4", "1f3a7", "1f3a8", "1f3a9", "1f3aa", "1f3ac", "1f3ad", "1f3ae", "1f3af", "1f3b3", "1f3b5", "1f3b6", "1f3b7", "1f3b8", "1f3b9", "1f3ba", "1f3bb", "1f3bc", "1f3be", "1f3bf", "1f3c0", "1f3c1", "1f3c3", "1f3c4", "1f3c5", "1f3c6", "1f3c8", "1f3ca", "1f3cb", "1f3d0", "1f3d3", "1f3d4", "1f3d5", "1f3d6", "1f3d7", "1f3d8", "1f3da", "1f3db", "1f3dc", "1f3dd", "1f3de", "1f3e0", "1f3e1", "1f3e2", "1f3e5", "1f3eb", "1f3ed", "1f3ee", "1f3f0", "1f3f4", "1f3f5", "1f3f8", "1f3f9", "1f3fa", "1f407", "1f409", "1f40b", "1f40d", "1f40e", "1f411", "1f412", "1f415", "1f416", "1f417", "1f418", "1f419", "1f41c", "1f41d", "1f422", "1f425", "1f426", "1f426-200d-2b1b", "1f427", "1f42c", "1f42f", "1f430", "1f431", "1f434", "1f436", "1f438", "1f43a", "1f43b", "1f43c", "1f440", "1f441", "1f442", "1f443", "1f444", "1f449", "1f44b", "1f44c", "1f44d", "1f44f", "1f451", "1f453", "1f454", "1f455", "1f460", "1f463", "1f465", "1f468", "1f468-200d-1f373", "1f46e", "1f475", "1f476", "1f478", "1f47c", "1f483", "1f487", "1f489", "1f48a", "1f48c", "1f48e", "1f490", "1f493", "1f494", "1f497", "1f499", "1f49a", "1f49c", "1f49e", "1f4a0", "1f4a1", "1f4a6", "1f4a7", "1f4a8", "1f4aa", "1f4ac", "1f4ae", "1f4b0", "1f4bb", "1f4ca", "1f4cb", "1f4cf", "1f4d0", "1f4d3", "1f4d6", "1f4da", "1f4dc", "1f4dd", "1f4e2", "1f4e3", "1f4e6", "1f4ee", "1f4ef", "1f4f1", "1f4f5", "1f4f7", "1f4f8", "1f4fb", "1f500", "1f501", "1f504", "1f50d", "1f50e", "1f511", "1f512", "1f514", "1f518", "1f525", "1f526", "1f528", "1f52c", "1f52d", "1f52e", "1f533", "1f534", "1f535", "1f536", "1f53a", "1f54a", "1f56f", "1f570", "1f573", "1f577", "1f57a", "1f58a", "1f58d", "1f590", "1f5dd", "1f5e1", "1f5e3", "1f5fa", "1f602", "1f604", "1f605", "1f60a", "1f60c", "1f60d", "1f60e", "1f60f", "1f612", "1f614", "1f617", "1f61e", "1f621", "1f622", "1f624", "1f628", "1f629", "1f62d", "1f630", "1f631", "1f632", "1f633", "1f634", "1f635-200d-1f4ab", "1f644", "1f645", "1f645-200d-2642", "1f647", "1f648", "1f64b", "1f64c", "1f64f", "1f680", "1f681", "1f682", "1f684", "1f686", "1f68c", "1f68f", "1f691", "1f692", "1f695", "1f697", "1f69a", "1f69c", "1f6a1", "1f6a3", "1f6a7", "1f6a8", "1f6a9", "1f6aa", "1f6ab", "1f6b0", "1f6b2", "1f6b4", "1f6b6", "1f6c1", "1f6cb", "1f6cf", "1f6d1", "1f6dd", "1f6e0", "1f6e1", "1f6e4", "1f6e5", "1f6f3", "1f6f5", "1f6f9", "1f6fa", "1f7e0", "1f7e1", "1f7e2", "1f7e3", "1f7e4", "1f7e6", "1f7e7", "1f90d", "1f910", "1f914", "1f916", "1f917", "1f918", "1f91d", "1f921", "1f922", "1f926", "1f928", "1f929", "1f92b", "1f92c", "1f92d", "1f931", "1f932", "1f934", "1f937", "1f938", "1f93a", "1f941", "1f947", "1f948", "1f94a", "1f94b", "1f94f", "1f951", "1f957", "1f958", "1f95a", "1f95b", "1f95d", "1f95e", "1f95f", "1f960", "1f963", "1f964", "1f965", "1f969", "1f96c", "1f96d", "1f971", "1f975", "1f976", "1f97a", "1f97e", "1f981", "1f984", "1f985", "1f988", "1f989", "1f98a", "1f98b", "1f98c", "1f992", "1f99a", "1f9a2", "1f9aa", "1f9b4", "1f9b5", "1f9b6", "1f9b7", "1f9b8", "1f9bf", "1f9c0", "1f9c3", "1f9c8", "1f9ca", "1f9cb", "1f9cd", "1f9ce", "1f9d0", "1f9d1", "1f9d1-200d-1f33e", "1f9d1-200d-1f393", "1f9d1-200d-1f3eb", "1f9d1-200d-1f4bc", "1f9d1-200d-1f692", "1f9d1-200d-2695", "1f9d1-200d-2708", "1f9d2", "1f9d7", "1f9d8", "1f9d9", "1f9da", "1f9dc", "1f9de", "1f9e0", "1f9e3", "1f9e4", "1f9e7", "1f9e9", "1f9ed", "1f9ee", "1f9ef", "1f9f1", "1f9f3", "1f9f4", "1f9f5", "1f9f6", "1f9f8", "1f9f9", "1f9ff", "1fa75", "1fa76", "1fa77", "1fa78", "1fa79", "1fa81", "1fa82", "1fa84", "1fa86", "1fa88", "1fa91", "1fa94", "1fa95", "1fa97", "1fa99", "1fa9a", "1fa9c", "1fa9e", "1fa9f", "1faa2", "1faa8", "1faab", "1fab4", "1fab5", "1fab7", "1fab8", "1faba", "1fabb", "1fabc", "1fac0", "1fac1", "1fac2", "1fad0", "1fad2", "1fad4", "1fad6", "1fad7", "1fad8", "1fae1", "1fae5", "1fae7", "1faf0", "1faf4", "1faf6", "231b", "23f0", "23f1", "23f3", "2600", "2601", "2602", "2615", "2618", "261d", "262e", "2668", "267e", "267f", "2693", "2694", "2696", "26a1", "26ab", "26bd", "26be", "26c5", "26c8", "26ea", "26f0", "26f3", "26f5", "26f7", "26f8", "26fa", "2702", "2708", "2709", "270a", "270b", "270c", "270d", "270f", "2716", "2728", "2734", "2744", "2753", "2764", "2795", "2796", "27a1", "27b0", "2b50", "2b55", "3030"];
+/* 真實照片對照：牌名 → 英文維基百科條目。圖片於執行時由維基百科取得（CC 授權），無法取得時改用插圖 */
+window.PHOTOS={
+"animals": {
+"獅子": "Lion",
+"老虎": "Tiger",
+"大象": "African elephant",
+"狼": "Gray wolf",
+"狐狸": "Red fox",
+"貓": "Cat",
+"狗": "Dog",
+"兔子": "European rabbit",
+"鹿": "Red deer",
+"熊": "Brown bear",
+"貓頭鷹": "Barn owl",
+"老鷹": "Bald eagle",
+"鴿子": "Rock dove",
+"烏鴉": "Carrion crow",
+"蝴蝶": "Monarch butterfly",
+"蜜蜂": "Western honey bee",
+"螞蟻": "Ant",
+"蜘蛛": "Spider",
+"蛇": "Snake",
+"烏龜": "Sea turtle",
+"海豚": "Bottlenose dolphin",
+"鯨魚": "Humpback whale",
+"章魚": "Octopus",
+"鯊魚": "Great white shark",
+"企鵝": "Emperor penguin",
+"孔雀": "Indian peafowl",
+"馬": "Horse",
+"猴子": "Japanese macaque",
+"熊貓": "Giant panda",
+"水母": "Jellyfish"
+},
+"plants": {
+"玫瑰": "Rose",
+"向日葵": "Common sunflower",
+"櫻花": "Cherry blossom",
+"蓮花": "Nelumbo nucifera",
+"仙人掌": "Cactus",
+"竹子": "Bamboo",
+"松樹": "Pine",
+"楓葉": "Maple",
+"蒲公英": "Taraxacum",
+"薰衣草": "Lavandula",
+"菊花": "Chrysanthemum",
+"茉莉": "Jasminum sambac",
+"梅花": "Prunus mume",
+"蘭花": "Phalaenopsis",
+"含羞草": "Mimosa pudica",
+"常春藤": "Hedera helix",
+"橡樹": "Quercus robur",
+"柳樹": "Salix babylonica",
+"鬱金香": "Tulip",
+"牽牛花": "Ipomoea nil",
+"多肉植物": "Succulent plant",
+"椰子樹": "Coconut",
+"稻穗": "Rice",
+"苔蘚": "Moss",
+"四葉幸運草": "Four-leaf clover",
+"木棉花": "Bombax ceiba",
+"紫藤": "Wisteria",
+"繡球花": "Hydrangea",
+"芒草": "Miscanthus sinensis",
+"榕樹": "Ficus microcarpa"
+},
+"food": {
+"白飯": "Cooked rice",
+"拉麵": "Ramen",
+"麵包": "Bread",
+"水餃": "Jiaozi",
+"壽司": "Sushi",
+"披薩": "Pizza",
+"漢堡": "Hamburger",
+"炸雞": "Fried chicken",
+"火鍋": "Hot pot",
+"牛排": "Steak",
+"蛋": "Fried egg",
+"豆腐": "Tofu",
+"沙拉": "Salad",
+"巧克力": "Chocolate",
+"蛋糕": "Cake",
+"冰淇淋": "Ice cream",
+"蜂蜜": "Honey",
+"起司": "Cheese",
+"辣椒": "Chili pepper",
+"湯圓": "Tangyuan (food)",
+"滷肉飯": "Lu rou fan",
+"牛肉麵": "Beef noodle soup",
+"蚵仔煎": "Oyster omelette",
+"臭豆腐": "Stinky tofu",
+"小籠包": "Xiaolongbao",
+"鹽酥雞": "Taiwanese fried chicken",
+"肉粽": "Zongzi",
+"刈包": "Gua bao",
+"蔥油餅": "Scallion pancake",
+"鳳梨酥": "Pineapple cake",
+"豆花": "Douhua",
+"剉冰": "Baobing",
+"烤地瓜": "Sweet potato",
+"烤玉米": "Corn on the cob",
+"大腸包小腸": "Taiwanese sausage"
+},
+"fruit": {
+"蘋果": "Apple",
+"青蘋果": "Granny Smith",
+"香蕉": "Banana",
+"西瓜": "Watermelon",
+"檸檬": "Lemon",
+"草莓": "Strawberry",
+"鳳梨": "Pineapple",
+"芒果": "Mango",
+"葡萄": "Grape",
+"橘子": "Mandarin orange",
+"櫻桃": "Cherry",
+"水蜜桃": "Peach",
+"梨子": "Pear",
+"奇異果": "Kiwifruit",
+"藍莓": "Blueberry",
+"椰子": "Coconut",
+"哈密瓜": "Cantaloupe",
+"番茄": "Tomato",
+"酪梨": "Avocado",
+"荔枝": "Lychee",
+"柿子": "Persimmon",
+"龍眼": "Longan",
+"柚子": "Pomelo",
+"蓮霧": "Syzygium samarangense",
+"火龍果": "Pitaya",
+"楊桃": "Carambola",
+"芭樂": "Guava",
+"榴槤": "Durian",
+"梅子": "Plum",
+"釋迦": "Sugar-apple"
+},
+"drinks": {
+"珍珠奶茶": "Bubble tea",
+"黑咖啡": "Coffee",
+"綠茶": "Green tea",
+"紅茶": "Black tea",
+"牛奶": "Milk",
+"果汁": "Juice",
+"汽水": "Soft drink",
+"拿鐵": "Caffè latte",
+"抹茶": "Matcha",
+"烏龍茶": "Oolong",
+"熱可可": "Hot chocolate",
+"豆漿": "Soy milk",
+"檸檬水": "Lemonade",
+"氣泡水": "Carbonated water",
+"白開水": "Drinking water",
+"運動飲料": "Sports drink",
+"能量飲料": "Energy drink",
+"冬瓜茶": "Winter melon tea",
+"青草茶": "Herbal tea",
+"椰子水": "Coconut water",
+"酸梅湯": "Suanmeitang",
+"養樂多": "Yakult",
+"熱湯": "Soup",
+"甘蔗汁": "Sugarcane juice",
+"冰咖啡": "Iced coffee",
+"洛神花茶": "Hibiscus tea",
+"蔬果汁": "Smoothie",
+"杏仁茶": "Almond milk"
+},
+"landscape": {
+"高山": "Mountain",
+"大海": "Ocean",
+"瀑布": "Waterfall",
+"河流": "River",
+"湖泊": "Lake",
+"森林": "Forest",
+"沙漠": "Desert",
+"草原": "Grassland",
+"雪山": "Matterhorn",
+"火山": "Volcano",
+"峽谷": "Canyon",
+"洞穴": "Cave",
+"小島": "Island",
+"沙灘": "Beach",
+"懸崖": "Cliff",
+"雲海": "Sea of clouds",
+"日出": "Sunrise",
+"夕陽": "Sunset",
+"星空": "Milky Way",
+"月亮": "Moon",
+"彩虹": "Rainbow",
+"暴風雨": "Thunderstorm",
+"濃霧": "Fog",
+"梯田": "Terrace (agriculture)",
+"古橋": "Arch bridge",
+"山間小徑": "Trail",
+"溫泉": "Hot spring",
+"極光": "Aurora",
+"冰河": "Glacier",
+"綠洲": "Oasis"
+},
+"vehicles": {
+"腳踏車": "Bicycle",
+"機車": "Motorcycle",
+"汽車": "Car",
+"公車": "Bus",
+"火車": "Train",
+"高鐵": "Taiwan High Speed Rail",
+"飛機": "Airliner",
+"直升機": "Helicopter",
+"郵輪": "Cruise ship",
+"帆船": "Sailboat",
+"小艇": "Rowing",
+"潛水艇": "Submarine",
+"熱氣球": "Hot air balloon",
+"火箭": "Rocket",
+"滑板": "Skateboard",
+"滑雪板": "Ski",
+"馬車": "Carriage",
+"計程車": "Taxi",
+"救護車": "Ambulance",
+"消防車": "Fire engine",
+"卡車": "Truck",
+"推土機": "Bulldozer",
+"拖拉機": "Tractor",
+"旋轉木馬": "Carousel",
+"摩天輪": "Ferris wheel",
+"雲霄飛車": "Roller coaster",
+"纜車": "Cable car",
+"步行": "Walking",
+"輪椅": "Wheelchair",
+"三輪車": "Auto rickshaw"
+},
+"objects": {
+"鑰匙": "Key (lock)",
+"雨傘": "Umbrella",
+"鏡子": "Mirror",
+"書": "Book",
+"筆": "Pen",
+"時鐘": "Clock",
+"地圖": "Map",
+"指南針": "Compass",
+"行李箱": "Suitcase",
+"手機": "Smartphone",
+"相機": "Camera",
+"麥克風": "Microphone",
+"耳機": "Headphones",
+"蠟燭": "Candle",
+"燈泡": "Incandescent light bulb",
+"剪刀": "Scissors",
+"針線": "Sewing needle",
+"鎖": "Padlock",
+"錨": "Anchor",
+"帽子": "Hat",
+"眼鏡": "Glasses",
+"手套": "Glove",
+"圍巾": "Scarf",
+"背包": "Backpack",
+"風箏": "Kite",
+"氣球": "Balloon",
+"禮物": "Gift",
+"茶壺": "Teapot",
+"杯子": "Cup",
+"沙漏": "Hourglass"
+},
+"music": {
+"鋼琴": "Piano",
+"小提琴": "Violin",
+"吉他": "Acoustic guitar",
+"鼓": "Drum",
+"長笛": "Flute",
+"薩克斯風": "Saxophone",
+"小號": "Trumpet",
+"大提琴": "Cello",
+"豎琴": "Harp",
+"古箏": "Guzheng",
+"二胡": "Erhu",
+"笛子": "Dizi (instrument)",
+"琵琶": "Pipa",
+"鈴鐺": "Bell",
+"口琴": "Harmonica",
+"烏克麗麗": "Ukulele",
+"手風琴": "Accordion",
+"木魚": "Muyu",
+"缽": "Singing bowl",
+"風琴": "Pipe organ",
+"三角鐵": "Triangle (musical instrument)",
+"響板": "Castanets",
+"電吉他": "Electric guitar",
+"電子琴": "Electronic keyboard",
+"留聲機": "Phonograph",
+"合唱": "Choir",
+"口哨": "Whistling"
+},
+"sports": {
+"跑步": "Running",
+"游泳": "Swimming (sport)",
+"籃球": "Basketball",
+"足球": "Association football",
+"棒球": "Baseball",
+"網球": "Tennis",
+"羽球": "Badminton",
+"桌球": "Table tennis",
+"排球": "Volleyball",
+"高爾夫": "Golf",
+"滑雪": "Skiing",
+"滑板": "Skateboarding",
+"衝浪": "Surfing",
+"攀岩": "Rock climbing",
+"騎自行車": "Cycling",
+"瑜伽": "Yoga",
+"拳擊": "Boxing",
+"擊劍": "Fencing",
+"射箭": "Archery",
+"體操": "Gymnastics",
+"舉重": "Weightlifting",
+"馬拉松": "Marathon",
+"划船": "Rowing",
+"保齡球": "Ten-pin bowling",
+"飛盤": "Frisbee",
+"溜冰": "Ice skating",
+"橄欖球": "Rugby union",
+"釣魚": "Fishing",
+"柔道": "Judo",
+"登山健行": "Hiking"
+},
+"house": {
+"窗戶": "Window",
+"屋頂": "Roof",
+"煙囪": "Chimney",
+"籬笆": "Fence",
+"庭院": "Courtyard",
+"客廳": "Living room",
+"廚房": "Kitchen",
+"臥室": "Bedroom",
+"書房": "Study (room)",
+"浴室": "Bathroom",
+"陽台": "Balcony",
+"閣樓": "Attic",
+"地下室": "Basement",
+"樓梯": "Stairs",
+"走廊": "Corridor",
+"壁爐": "Fireplace",
+"燈": "Lamp",
+"時鐘": "Clock",
+"書櫃": "Bookcase",
+"餐桌": "Dining room",
+"地毯": "Carpet",
+"窗簾": "Curtain",
+"信箱": "Letter box",
+"鑰匙": "Key (lock)",
+"花瓶": "Vase",
+"屋簷下的鳥巢": "Bird nest",
+"圍牆外的大樹": "Tree"
+},
+"weather": {
+"晴天": "Sunshine",
+"多雲": "Cloud",
+"陰天": "Overcast",
+"下雨": "Rain",
+"雷雨": "Thunderstorm",
+"彩虹": "Rainbow",
+"下雪": "Snow",
+"暴風雪": "Blizzard",
+"霧": "Fog",
+"颱風": "Tropical cyclone",
+"微風": "Breeze",
+"強風": "Wind",
+"炎熱": "Heat wave",
+"寒流": "Cold wave",
+"晨曦": "Dawn",
+"黃昏": "Dusk",
+"夜晚": "Night",
+"星夜": "Night sky",
+"滿月": "Full moon",
+"新月": "New moon",
+"沙塵暴": "Dust storm",
+"冰雹": "Hail",
+"乾旱": "Drought",
+"極光": "Aurora",
+"晨露": "Dew"
+},
+"careers": {
+"老師": "Teacher",
+"醫師": "Physician",
+"護理師": "Nursing",
+"工程師": "Engineer",
+"科學家": "Scientist",
+"程式設計師": "Programmer",
+"設計師": "Designer",
+"作家": "Writer",
+"音樂家": "Musician",
+"演員": "Actor",
+"廚師": "Chef",
+"農夫": "Farmer",
+"園藝師": "Gardener",
+"木匠": "Carpenter",
+"飛行員": "Pilot (aeronautics)",
+"消防員": "Firefighter",
+"警察": "Police officer",
+"律師": "Lawyer",
+"會計師": "Accountant",
+"企業家": "Entrepreneur",
+"業務": "Salesperson",
+"記者": "Journalist",
+"心理師": "Psychotherapy",
+"社工": "Social worker",
+"圖書館員": "Librarian",
+"建築師": "Architect",
+"攝影師": "Photographer",
+"運動員": "Athlete",
+"導遊": "Tour guide",
+"藥師": "Pharmacist"
+},
+"body": {
+"頭腦": "Human brain",
+"眼睛": "Human eye",
+"耳朵": "Ear",
+"嘴巴": "Mouth",
+"喉嚨": "Throat",
+"心臟": "Heart",
+"肺": "Lung",
+"胃": "Stomach",
+"手": "Hand",
+"手指": "Finger",
+"拳頭": "Fist",
+"腿": "Human leg",
+"膝蓋": "Knee",
+"腳": "Foot",
+"骨頭": "Bone",
+"血液": "Blood",
+"皮膚": "Human skin",
+"頭髮": "Hair",
+"牙齒": "Tooth",
+"鼻子": "Human nose",
+"脖子": "Neck",
+"肌肉": "Skeletal muscle",
+"腳印": "Footprint",
+"神經": "Neuron",
+"肩膀": "Shoulder",
+"背": "Human back",
+"腰": "Waist"
+},
+"childhood": {
+"積木": "Toy block",
+"洋娃娃": "Doll",
+"泰迪熊": "Teddy bear",
+"溜滑梯": "Playground slide",
+"盪鞦韆": "Swing (seat)",
+"沙堡": "Sand castle",
+"紙飛機": "Paper plane",
+"風箏": "Kite",
+"蠟筆": "Crayon",
+"拼圖": "Jigsaw puzzle",
+"玩具車": "Toy car",
+"機器人": "Robot",
+"足球": "Football",
+"跳繩": "Skipping rope",
+"泡泡": "Soap bubble",
+"故事書": "Picture book",
+"糖果": "Candy",
+"手電筒": "Flashlight",
+"彈珠": "Marble (toy)",
+"小火車": "Toy train",
+"旋轉木馬": "Carousel",
+"氣球": "Balloon",
+"彩虹": "Rainbow",
+"小蝌蚪": "Tadpole",
+"沙坑": "Sandbox"
+}
+};
 
 </script>
 <script>
@@ -1636,19 +2103,11 @@ window.QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\" s
     if (e.indexOf("\u200d") < 0) cps = cps.filter(function (x) { return x !== "fe0f"; });
     return cps.join("-");
   }
-  var SET3D = {}; (window.IMG3D || []).forEach(function (k) { SET3D[k] = 1; });
-  function svgUri(k) {
-    var svg = window.TWSVG && window.TWSVG[k]; if (!svg) return "";
-    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    return imgCache[k];
-  }
-  window.__tw = function (img) { var u = svgUri(img.getAttribute("data-k")); img.onerror = null; if (u) img.src = u; };
   function art(c, cls) {
-    var k = twKey(c.emoji);
-    if (SET3D[k]) return '<img class="tw t3 ' + (cls || "") + '" src="assets/3d/' + k + '.webp" data-k="' + k + '" onerror="__tw(this)" alt="' + c.emoji + '" draggable="false">';
-    var u = svgUri(k);
-    if (!u) return '<span class="fb">' + c.emoji + '</span>';
-    return '<img class="tw ' + (cls || "") + '" src="' + u + '" alt="' + c.emoji + '" draggable="false">';
+    var k = twKey(c.emoji), svg = window.TWSVG && window.TWSVG[k];
+    if (!svg) return '<span class="fb">' + c.emoji + '</span>';
+    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    return '<img class="tw ' + (cls || "") + '" src="' + imgCache[k] + '" alt="' + c.emoji + '" draggable="false">';
   }
   // 把文字開頭的 emoji 換成內嵌向量插圖，確保各裝置顯示一致（不再出現缺字方框）
   var LEAD = /^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?)*)\s*/u;
@@ -1672,10 +2131,48 @@ window.QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\" s
     num = ("00" + num).slice(-2);
     return '<div class="cf' + (light ? " lt" : "") + (c.blind && state.mode === "draw" ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
       '<i class="fr"></i><span class="no">' + (c.blind && state.mode === "draw" ? "" : "No." + num) + '</span><span class="st">✦</span>' +
-      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' +
+      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' + photoLayer(c) +
       (c.blind && state.mode === "draw"
         ? '</div>'
         : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
+  }
+  // ===== 真實照片：從英文維基百科條目取得首圖（僅取 JPG 照片），失敗則維持插圖 =====
+  var PH_KEY = "card-oracle-photo-v1", phCache = {}, phPending = {};
+  try { phCache = JSON.parse(localStorage.getItem(PH_KEY) || "{}"); } catch (e) { phCache = {}; }
+  function phSave() { try { localStorage.setItem(PH_KEY, JSON.stringify(phCache)); } catch (e) {} }
+  function photoTitle(c) {
+    if (!window.PHOTOS) return "";
+    for (var d in window.PHOTOS) { var t = window.PHOTOS[d][c.name]; if (t && DECKS[d] && DECKS[d].cards.indexOf(c) >= 0) return t; }
+    return "";
+  }
+  function photoLayer(c) {
+    var t = photoTitle(c); if (!t) return "";
+    return '<div class="photo" data-t="' + esc(t) + '"></div>';
+  }
+  function phUrl(t) {
+    if (phCache[t] !== undefined) return Promise.resolve(phCache[t]);
+    if (phPending[t]) return phPending[t];
+    phPending[t] = fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(t.replace(/ /g, "_")))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        var u = j && j.type !== "disambiguation" && j.thumbnail && j.thumbnail.source || "";
+        if (!/\.jpe?g(\/|$)/i.test(u)) u = "";
+        else u = u.replace(/\/\d+px-/, "/500px-");
+        phCache[t] = u; phSave(); return u;
+      })
+      .catch(function () { return ""; });
+    return phPending[t];
+  }
+  function loadPhotos(root) {
+    if (!root) return;
+    Array.prototype.forEach.call(root.querySelectorAll(".photo[data-t]"), function (el) {
+      phUrl(el.getAttribute("data-t")).then(function (u) {
+        if (!u) return;
+        var im = new Image();
+        im.onload = function () { el.style.backgroundImage = "url('" + u + "')"; el.classList.add("on"); if (el.parentNode) el.parentNode.classList.add("hasph"); };
+        im.src = u;
+      });
+    });
   }
   function backHtml(c) {
     return '<div class="bk"><div class="wm">' + art(c) + '</div>' +
@@ -1740,11 +2237,12 @@ window.QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\" s
       el.onclick = function () { el.classList.add("picked"); openCard(c); };
       g.appendChild(el);
     });
+    loadPhotos(g);
   }
 
   function openCard(c) {
     state.current = c;
-    $("front").innerHTML = face(c);
+    $("front").innerHTML = face(c); loadPhotos($("front"));
     $("backface").innerHTML = backHtml(c);
     var fl = $("flip"); fl.classList.remove("open");
     $("modal").hidden = false;
