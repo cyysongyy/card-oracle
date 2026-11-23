@@ -121,12 +121,18 @@
   // 翻牌：不使用 3D 背面隱藏（手機 Safari 等會露出正面），改為轉到 90° 時切換正反面
   function flipTo(fl, open) {
     if (fl.classList.contains("open") === open) return;
-    if (!fl.animate) { fl.classList.toggle("open", open); return; }
-    var a1 = fl.animate([{ transform: "perspective(900px) rotateY(0deg)" }, { transform: "perspective(900px) rotateY(90deg)" }], { duration: 260, easing: "ease-in" });
-    a1.onfinish = function () {
+    clearTimeout(fl._ft);
+    fl.style.transition = "transform .22s ease-in";
+    fl.style.transform = "perspective(900px) rotateY(90deg)";
+    fl._ft = setTimeout(function () {
       fl.classList.toggle("open", open);
-      fl.animate([{ transform: "perspective(900px) rotateY(-90deg)" }, { transform: "perspective(900px) rotateY(0deg)" }], { duration: 260, easing: "ease-out" });
-    };
+      fl.style.transition = "none";
+      fl.style.transform = "perspective(900px) rotateY(-90deg)";
+      void fl.offsetWidth;
+      fl.style.transition = "transform .22s ease-out";
+      fl.style.transform = "perspective(900px) rotateY(0deg)";
+      fl._ft = setTimeout(function () { fl.style.transition = ""; fl.style.transform = ""; }, 260);
+    }, 230);
   }
   function toast(msg) {
     var t = $("toast"); t.textContent = msg; t.hidden = false;
@@ -198,7 +204,7 @@
     state.current = c;
     $("front").innerHTML = face(c); loadPhotos($("front"));
     $("backface").innerHTML = backHtml(c);
-    var fl = $("flip"); fl.classList.remove("open");
+    var fl = $("flip"); clearTimeout(fl._ft); fl.style.transition = ""; fl.style.transform = ""; fl.classList.remove("open");
     $("modal").hidden = false;
     clearTimeout(state.timer);
     state.timer = setTimeout(function () { flipTo(fl, true); }, 900);
