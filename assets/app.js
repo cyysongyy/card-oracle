@@ -22,17 +22,33 @@
     return a;
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  // 圖像：內嵌 Twemoji 向量插圖（CC-BY 4.0）；缺圖時退回系統 emoji
+  var imgCache = {};
+  function twKey(e) {
+    var cps = Array.from(e).map(function (ch) { return ch.codePointAt(0).toString(16); });
+    if (e.indexOf("\u200d") < 0) cps = cps.filter(function (x) { return x !== "fe0f"; });
+    return cps.join("-");
+  }
+  function art(c, cls) {
+    var k = twKey(c.emoji), svg = window.TWSVG && window.TWSVG[k];
+    if (!svg) return '<span class="fb">' + c.emoji + '</span>';
+    if (!imgCache[k]) imgCache[k] = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    return '<img class="tw ' + (cls || "") + '" src="' + imgCache[k] + '" alt="' + c.emoji + '" draggable="false">';
+  }
   function face(c) {
-    var bg = c.bg || ("linear-gradient(160deg,hsl(" + c.hue + ",55%,58%),hsl(" + ((c.hue + 30) % 360) + ",50%,38%))");
-    var fg = c.fg || "#fff";
-    var sh = c.fg ? "none" : "0 1px 3px #0005";
-    return '<div class="cf" style="background:' + bg + ';color:' + fg + ';text-shadow:' + sh + '">' +
-      '<div class="em">' + c.emoji + '</div><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div>';
+    var bg = c.bg || ("radial-gradient(circle at 50% 36%,hsl(" + c.hue + ",78%,74%) 0,hsl(" + c.hue + ",68%,54%) 52%,hsl(" + ((c.hue + 25) % 360) + ",62%,30%) 100%)");
+    var light = c.fg && c.fg !== "#fff";
+    var num = String(c.id).replace(/\D/g, "");
+    num = ("00" + num).slice(-2);
+    return '<div class="cf' + (light ? " lt" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
+      '<i class="fr"></i><span class="no">No.' + num + '</span><span class="st">✦</span>' +
+      '<div class="art"><div class="halo"></div>' + art(c) + '</div>' +
+      '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>';
   }
   function backHtml(c) {
-    return '<div class="bk">' +
-      '<div class="bk-h">' + c.emoji + ' ' + esc(c.name) + ' <small>' + esc(c.en) + '</small></div>' +
-      '<div class="bk-t">' + esc(c.title) + '</div>' +
+    return '<div class="bk"><div class="wm">' + art(c) + '</div>' +
+      '<div class="bk-h">' + art(c, "sm") + ' ' + esc(c.name) + ' <small>' + esc(c.en) + '</small></div>' +
+      '<div class="bk-t">' + esc(c.title) + '</div><div class="orn">❖ ✦ ❖</div>' +
       '<p>' + esc(c.meaning) + '</p>' +
       '<p><span class="tag t-l">光明面</span>' + esc(c.light) + '</p>' +
       '<p><span class="tag t-s">陰影面</span>' + esc(c.shadow) + '</p>' +
@@ -43,15 +59,26 @@
     clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 1800);
   }
 
+  var GROUPS = [
+    ["🌿 自然萬象", ["plants", "animals", "food", "landscape"]],
+    ["🔮 投射意象", ["colors", "shapes", "house", "dreams", "weather", "vehicles", "objects", "archetypes", "scenes", "music"]],
+    ["🧠 心理探索", ["emotions", "values", "strengths", "careers", "body", "gestures", "childhood", "fairytales", "sports", "selfcare"]],
+    ["🎲 綜合", ["mix"]]
+  ];
   function renderTabs() {
     var box = $("decks"); box.innerHTML = "";
-    ids.forEach(function (id) {
-      var d = DECKS[id];
-      var b = document.createElement("button");
-      b.textContent = d.emoji + " " + d.name;
-      if (state.deck === id) b.className = "on";
-      b.onclick = function () { state.deck = id; reset(); renderTabs(); };
-      box.appendChild(b);
+    GROUPS.forEach(function (g) {
+      var row = document.createElement("div"); row.className = "grp";
+      var lab = document.createElement("span"); lab.className = "glab"; lab.textContent = g[0]; row.appendChild(lab);
+      g[1].forEach(function (id) {
+        var d = DECKS[id]; if (!d) return;
+        var b = document.createElement("button");
+        b.textContent = d.emoji + " " + d.name.replace("牌組", "");
+        if (state.deck === id) b.className = "on";
+        b.onclick = function () { state.deck = id; reset(); renderTabs(); };
+        row.appendChild(b);
+      });
+      box.appendChild(row);
     });
   }
 
@@ -132,18 +159,34 @@
   $("btnClear").onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} showHistory(); };
   $("btnCopy").onclick = copyResult;
   $("btnAgain").onclick = function () { closeModal(); if (state.mode === "draw") reset(); };
-  $("btnQR").onclick = function () {
-    var box = $("qrbox"); box.innerHTML = ""; $("qrurl").textContent = pageUrl();
-    if (window.QRCode) new QRCode(box, { text: pageUrl(), width: 240, height: 240, correctLevel: QRCode.CorrectLevel.M });
-    else box.textContent = "QR 元件載入失敗，請確認網路連線";
-    $("qrm").hidden = false;
-  };
+  // QR：內嵌 SVG，固定指向正式網址
+  var SITE = window.SITE_URL || pageUrl();
+  function qrPng(cb) {
+    var img = new Image();
+    img.onload = function () {
+      var cv = document.createElement("canvas"); cv.width = cv.height = 800;
+      var x = cv.getContext("2d"); x.imageSmoothingEnabled = false;
+      x.fillStyle = "#fff"; x.fillRect(0, 0, 800, 800); x.drawImage(img, 0, 0, 800, 800);
+      cb(cv.toDataURL("image/png"));
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(window.QR_SVG);
+  }
+  function downloadQR() {
+    qrPng(function (url) { var a = document.createElement("a"); a.href = url; a.download = "card-oracle-qr.png"; a.click(); });
+  }
+  function printQR() {
+    var w = window.open("", "_blank");
+    if (!w) { toast("請允許彈出視窗再列印"); return; }
+    w.document.write('<title>心象牌卡 QR</title><body style="font-family:sans-serif;text-align:center;padding:40px"><h1>🎴 心象牌卡</h1><p>手機掃描 QR Code，憑直覺抽一張牌</p><div style="width:340px;margin:20px auto">' + window.QR_SVG + '</div><p>' + SITE + '</p><script>setTimeout(function(){print()},300)<\/script>');
+    w.document.close();
+  }
+  $("qrhome").innerHTML = window.QR_SVG || "";
+  $("qrbox").innerHTML = window.QR_SVG || "";
+  $("siteurl").textContent = SITE;
+  $("btnQR").onclick = function () { $("qrurl").textContent = SITE; $("qrm").hidden = false; };
   $("closeQR").onclick = function () { $("qrm").hidden = true; };
-  $("btnQRdl").onclick = function () {
-    var cv = $("qrbox").querySelector("canvas"); if (!cv) return;
-    var a = document.createElement("a"); a.href = cv.toDataURL("image/png"); a.download = "card-oracle-qr.png"; a.click();
-  };
-  $("btnQRprint").onclick = function () { document.body.classList.add("printqr"); window.print(); document.body.classList.remove("printqr"); };
+  $("btnQRdl").onclick = downloadQR; $("btnQRdl2").onclick = downloadQR;
+  $("btnQRprint").onclick = printQR; $("btnQRprint2").onclick = printQR;
   [$("modal"), $("hist"), $("qrm")].forEach(function (m) {
     m.addEventListener("click", function (e) { if (e.target === m) { clearTimeout(state.timer); m.hidden = true; } });
   });

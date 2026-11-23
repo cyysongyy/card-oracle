@@ -11,6 +11,14 @@
 <header class="top">
   <h1>🎴 心象牌卡</h1>
   <p class="sub">先看圖卡，憑直覺選一張，翻到背面看它映照出你的內心</p>
+  <section class="qrhome" aria-label="掃描進入">
+    <div id="qrhome" class="qrbox" role="img" aria-label="網站 QR Code"></div>
+    <div class="qrtxt">
+      <b>📱 掃描 QR Code，立即進入</b>
+      <span id="siteurl"></span>
+      <div class="qracts"><button id="btnQRdl2">下載 QR 圖片</button><button id="btnQRprint2">列印海報</button></div>
+    </div>
+  </section>
   <nav id="decks" class="tabs" aria-label="牌組"></nav>
 </header>
 
@@ -33,7 +41,7 @@
 
 <footer>
   <p>本牌卡為自我覺察與反思的輔助工具，屬「投射式」趣味與對話引導，<b>並非心理診斷或專業評估</b>。<br>
-  <span id="count"></span>想新增牌組？見 README。</p>
+  <span id="count"></span>想新增牌組？見 README。<br>插圖：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC-BY 4.0）。</p>
 </footer>
 
 <div id="modal" class="modal" hidden>
@@ -61,7 +69,7 @@
   <div class="sheet" style="text-align:center">
     <button id="closeQR" class="x" aria-label="關閉">✕</button>
     <h2>📱 掃描進入心象牌卡</h2>
-    <div id="qrbox" style="display:flex;justify-content:center;margin:12px 0"></div>
+    <div id="qrbox" class="qrbox big" style="margin:12px auto"></div>
     <p id="qrurl" style="word-break:break-all;color:#77747f;font-size:13px"></p>
     <div class="sheet-acts"><button id="btnQRdl" class="pri">下載 QR 圖片</button><button id="btnQRprint">列印</button></div>
   </div>
@@ -85,7 +93,18 @@
 <script src="data/archetypes.js"></script>
 <script src="data/scenes.js"></script>
 <script src="data/music.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="data/emotions.js"></script>
+<script src="data/values.js"></script>
+<script src="data/strengths.js"></script>
+<script src="data/careers.js"></script>
+<script src="data/body.js"></script>
+<script src="data/gestures.js"></script>
+<script src="data/childhood.js"></script>
+<script src="data/fairytales.js"></script>
+<script src="data/sports.js"></script>
+<script src="data/selfcare.js"></script>
+<script src="data/emoji.js"></script>
+<script src="data/qr.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
