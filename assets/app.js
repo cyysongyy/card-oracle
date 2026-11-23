@@ -9,6 +9,8 @@
   DECKS.mix = { id: "mix", name: "綜合", emoji: "🎲", cards: all,
     intro: "所有牌組洗在一起。先看圖卡，憑直覺選一張，再翻到背面。" };
   ids.push("mix");
+  // 盲牌：牌名本身就會洩漏答案的牌組（抽牌模式下牌面只顯示圖，不顯示名稱）
+  ["emotions", "iceberg"].forEach(function (k) { if (DECKS[k]) DECKS[k].cards.forEach(function (c) { c.blind = true; }); });
 
   var $ = function (id) { return document.getElementById(id); };
   var state = { deck: null, mode: "draw", order: [], current: null, timer: null };
@@ -58,7 +60,9 @@
     return '<div class="cf' + (light ? " lt" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
       '<i class="fr"></i><span class="no">No.' + num + '</span><span class="st">✦</span>' +
       '<div class="art"><div class="halo"></div>' + art(c) + '</div>' +
-      '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>';
+      (c.blind && state.mode === "draw"
+        ? '<div class="rib blind"><div class="nm">？</div><div class="en">翻開看看</div></div></div>'
+        : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
   }
   function backHtml(c) {
     return '<div class="bk"><div class="wm">' + art(c) + '</div>' +
@@ -118,7 +122,7 @@
     var list = state.mode === "draw" ? state.order : d.cards;
     list.forEach(function (c) {
       var el = document.createElement("button");
-      el.className = "c"; el.setAttribute("aria-label", c.name);
+      el.className = "c"; el.setAttribute("aria-label", (c.blind && state.mode === "draw") ? "牌卡" : c.name);
       el.innerHTML = face(c);
       el.onclick = function () { el.classList.add("picked"); openCard(c); };
       g.appendChild(el);
