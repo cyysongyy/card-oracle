@@ -202,3 +202,11 @@ button.pri,.tabs button.on,.seg button.on{background:linear-gradient(180deg,#7d9
 .glab{flex-basis:auto!important}
 .grp:not(.open) > button{display:none}
 .grp{justify-content:center}
+
+/* v6 抽牌模式：牌面無文字，圖案置中放大 */
+.cf.nl .art{top:6cqw;height:calc(100% - 12cqw)}
+.cf.nl .halo{width:88cqw;height:88cqw}
+.cf.nl .tw{width:68cqw;height:68cqw}
+.cf.nl .fb{font-size:56cqw}
+.cf.nl .st{bottom:7cqw}
+.cf.nl .st,.cf.nl .no{display:none}

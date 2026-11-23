@@ -9,8 +9,8 @@
   DECKS.mix = { id: "mix", name: "綜合", emoji: "🎲", cards: all,
     intro: "所有牌組洗在一起。先看圖卡，憑直覺選一張，再翻到背面。" };
   ids.push("mix");
-  // 盲牌：牌名本身就會洩漏答案的牌組（抽牌模式下牌面只顯示圖，不顯示名稱）
-  ["emotions", "iceberg"].forEach(function (k) { if (DECKS[k]) DECKS[k].cards.forEach(function (c) { c.blind = true; }); });
+  // 盲牌：抽牌模式下所有牌面只顯示圖，不顯示任何文字；答案只在背面
+  all.forEach(function (c) { c.blind = true; });
 
   var $ = function (id) { return document.getElementById(id); };
   var state = { deck: null, mode: "draw", order: [], current: null, timer: null };
@@ -57,11 +57,11 @@
     var light = c.fg && c.fg !== "#fff";
     var num = String(c.id).replace(/\D/g, "");
     num = ("00" + num).slice(-2);
-    return '<div class="cf' + (light ? " lt" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
-      '<i class="fr"></i><span class="no">No.' + num + '</span><span class="st">✦</span>' +
+    return '<div class="cf' + (light ? " lt" : "") + (c.blind && state.mode === "draw" ? " nl" : "") + '" style="background:' + bg + ';' + (c.fg ? 'color:' + c.fg : '') + '">' +
+      '<i class="fr"></i><span class="no">' + (c.blind && state.mode === "draw" ? "" : "No." + num) + '</span><span class="st">✦</span>' +
       '<div class="art"><div class="halo"></div>' + art(c) + '</div>' +
       (c.blind && state.mode === "draw"
-        ? '<div class="rib blind"><div class="nm">？</div><div class="en">翻開看看</div></div></div>'
+        ? '</div>'
         : '<div class="rib"><div class="nm">' + esc(c.name) + '</div><div class="en">' + esc(c.en) + '</div></div></div>');
   }
   function backHtml(c) {
