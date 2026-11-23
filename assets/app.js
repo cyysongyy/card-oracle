@@ -75,9 +75,9 @@
   }
 
   var GROUPS = [
-    ["🌿 自然萬象", ["plants", "animals", "food", "landscape"]],
+    ["🌿 自然萬象", ["plants", "animals", "food", "fruit", "drinks", "landscape"]],
     ["🔮 投射意象", ["colors", "shapes", "house", "dreams", "weather", "vehicles", "objects", "archetypes", "scenes", "music"]],
-    ["🧠 心理探索", ["emotions", "values", "strengths", "careers", "body", "gestures", "childhood", "fairytales", "sports", "selfcare"]],
+    ["🧠 心理探索", ["emotions", "values", "strengths", "careers", "body", "gestures", "childhood", "fairytales", "sports", "selfcare", "relations", "campus", "growth", "leadership"]],
     ["🎲 綜合", ["mix"]]
   ];
   var openGroups = {};
