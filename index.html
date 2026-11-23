@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>心象牌卡 Card Oracle｜植物・動物・食物・山水</title>
+<meta name="description" content="線上心理投射牌卡：憑直覺選一張牌，看看背後的意涵。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>🎴 心象牌卡</h1>
+  <p class="sub">憑直覺選一張牌，看看它映照出你此刻的內心</p>
+  <nav id="decks" class="tabs" aria-label="牌組"></nav>
+</header>
+
+<main>
+  <section class="bar">
+    <div class="seg" role="tablist">
+      <button id="modeDraw" class="on">🔮 抽牌</button>
+      <button id="modeBrowse">📖 瀏覽圖鑑</button>
+    </div>
+    <div class="acts">
+      <button id="btnRandom" class="pri">✨ 幫我抽一張</button>
+      <button id="btnShuffle">🔀 重新洗牌</button>
+      <button id="btnHistory">🕘 我的紀錄</button>
+      <button id="btnQR">📱 QR Code</button>
+    </div>
+  </section>
+  <p id="intro" class="intro"></p>
+  <div id="grid" class="grid"></div>
+</main>
+
+<footer>
+  <p>本牌卡為自我覺察與反思的輔助工具，屬「投射式」趣味與對話引導，<b>並非心理診斷或專業評估</b>。<br>
+  共 4 大牌組、120 張牌。想新增牌組？見 README。</p>
+</footer>
+
+<div id="modal" class="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true">
+    <button id="close" class="x" aria-label="關閉">✕</button>
+    <div class="stage"><div id="flip" class="flip"><div class="face back"></div><div class="face front" id="front"></div></div></div>
+    <div id="detail" class="detail"></div>
+    <div class="sheet-acts">
+      <button id="btnCopy">📋 複製結果</button>
+      <button id="btnAgain" class="pri">再抽一張</button>
+    </div>
+  </div>
+</div>
+
+<div id="hist" class="modal" hidden>
+  <div class="sheet">
+    <button id="closeHist" class="x" aria-label="關閉">✕</button>
+    <h2>🕘 我的紀錄</h2>
+    <div id="histList"></div>
+    <div class="sheet-acts"><button id="btnClear">清除紀錄</button></div>
+  </div>
+</div>
+
+<div id="qrm" class="modal" hidden>
+  <div class="sheet" style="text-align:center">
+    <button id="closeQR" class="x" aria-label="關閉">✕</button>
+    <h2>📱 掃描進入心象牌卡</h2>
+    <div id="qrbox" style="display:flex;justify-content:center;margin:12px 0"></div>
+    <p id="qrurl" style="word-break:break-all;color:#77747f;font-size:13px"></p>
+    <div class="sheet-acts"><button id="btnQRdl" class="pri">下載 QR 圖片</button><button id="btnQRprint">列印</button></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<!-- 牌組資料：新增牌組只要在這裡多加一行 script，並在 app.js 的 DECK_META 登記 -->
+<script src="data/plants.js"></script>
+<script src="data/animals.js"></script>
+<script src="data/food.js"></script>
+<script src="data/landscape.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
